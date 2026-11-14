@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environment
+.venv/
+venv/
+
+# Secrets (this prototype has none, but never commit them)
+.env
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
