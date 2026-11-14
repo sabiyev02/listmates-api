@@ -4,6 +4,7 @@ Run with:  uvicorn app.main:app --reload
 """
 from fastapi import FastAPI
 
+from app.handlers import register_exception_handlers
 
 app = FastAPI(
     title="ListMates API",
@@ -14,3 +15,5 @@ app = FastAPI(
         "Click Authorize and paste user-a-token, user-b-token or admin-token."
     ),
 )
+
+register_exception_handlers(app)
