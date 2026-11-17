@@ -1,0 +1,1157 @@
+{
+  "info": {
+    "name": "ListMates API (Group 7)",
+    "description": "Assignment 2 example requests. Restart the server first, then run the whole collection top to bottom (Run collection). Every request checks its own status code.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api/v1"
+    },
+    {
+      "key": "tokenA",
+      "value": "user-a-token"
+    },
+    {
+      "key": "tokenB",
+      "value": "user-b-token"
+    },
+    {
+      "key": "tokenAdmin",
+      "value": "admin-token"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Greeting page",
+      "item": [
+        {
+          "name": "01. Greeting page (HTML)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type is HTML\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/html\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/greeting",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "greeting"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. CRUD as User A",
+      "item": [
+        {
+          "name": "02. List my lists",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"User A has 6 lists\", function () {",
+                  "    pm.expect(pm.response.json().meta.total).to.eql(6);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            }
+          }
+        },
+        {
+          "name": "03. Get one list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_101"
+              ]
+            }
+          }
+        },
+        {
+          "name": "04. Create a list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"New list is list_301\", function () {",
+                  "    pm.expect(pm.response.json().data.id).to.eql(\"list_301\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Gifts for December\",\n  \"description\": \"Ideas for the New Year.\",\n  \"visibility\": \"personal\",\n  \"items\": [\n    {\n      \"text\": \"Book for Leyla\",\n      \"dueDate\": \"2026-12-20\"\n    },\n    {\n      \"text\": \"Scarf for Mom\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "05. Update a list (make it Network)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_103",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_103"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"SE midterm prep\",\n  \"description\": \"Midterm on 23 November: Pressman chapters 1-4.\",\n  \"visibility\": \"network\",\n  \"items\": [\n    {\n      \"text\": \"Re-read Pressman ch. 1-4 notes\",\n      \"done\": true\n    },\n    {\n      \"text\": \"Solve last year's practice questions\",\n      \"dueDate\": \"2026-11-20\"\n    },\n    {\n      \"text\": \"Review mistakes with a teammate\",\n      \"dueDate\": \"2026-11-22\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "06. Fifth Public list is refused",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Error code is PUBLIC_LIST_LIMIT_REACHED\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"PUBLIC_LIST_LIMIT_REACHED\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Places to visit in Baku\",\n  \"visibility\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "07. Delete a list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"data is null\", function () {",
+                  "    pm.expect(pm.response.json().data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_105",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_105"
+              ]
+            }
+          }
+        },
+        {
+          "name": "08. Same Public list now works",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Places to visit in Baku\",\n  \"visibility\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Authentication and authorization",
+      "item": [
+        {
+          "name": "09. No token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Error code is AUTH_REQUIRED\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"AUTH_REQUIRED\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            }
+          }
+        },
+        {
+          "name": "10. Wrong token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Error code is INVALID_TOKEN\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"INVALID_TOKEN\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer wrong-token"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            }
+          }
+        },
+        {
+          "name": "11. User A opens User B's list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Error code is LIST_NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"LIST_NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_201",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_201"
+              ]
+            }
+          }
+        },
+        {
+          "name": "12. User B edits User A's list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Error code is LIST_NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"LIST_NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenB}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_101"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Mine now\",\n  \"visibility\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "13. User B deletes User A's list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Error code is LIST_NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"LIST_NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenB}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_101"
+              ]
+            }
+          }
+        },
+        {
+          "name": "14. User A filters by another owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "pm.test(\"Error code is FORBIDDEN\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"FORBIDDEN\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists?ownerId=user-b",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "ownerId",
+                  "value": "user-b"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Admin",
+      "item": [
+        {
+          "name": "15. Admin sees every list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lists from both users\", function () {",
+                  "    const owners = pm.response.json().data.map(l => l.ownerId);",
+                  "    pm.expect(owners).to.include(\"user-a\");",
+                  "    pm.expect(owners).to.include(\"user-b\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            }
+          }
+        },
+        {
+          "name": "16. Admin filters by User B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"User B has 3 lists\", function () {",
+                  "    pm.expect(pm.response.json().meta.total).to.eql(3);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists?ownerId=user-b",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "ownerId",
+                  "value": "user-b"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "17. Admin edits User B's list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_201",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_201"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Books I loved\",\n  \"description\": \"Edited by an admin.\",\n  \"visibility\": \"network\",\n  \"items\": [\n    {\n      \"text\": \"Atomic Habits\",\n      \"done\": true\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "18. Admin deletes User B's list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_203",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_203"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Validation",
+      "item": [
+        {
+          "name": "19. Many bad fields at once",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error code is VALIDATION_ERROR\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"VALIDATION_ERROR\");",
+                  "});",
+                  "pm.test(\"Six problems listed\", function () {",
+                  "    pm.expect(pm.response.json().error.details.length).to.eql(6);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hi\",\n  \"visibility\": \"secret\",\n  \"ownerId\": \"user-b\",\n  \"items\": [\n    {\n      \"text\": \"\",\n      \"done\": \"yes\"\n    },\n    {\n      \"text\": \"Pay rent\",\n      \"dueDate\": \"2026-02-30\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "20. Broken JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error code is INVALID_JSON\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"INVALID_JSON\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\": \"Gifts\",",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "21. PUT without title and visibility",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error code is VALIDATION_ERROR\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"VALIDATION_ERROR\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_103",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_103"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Only a description\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "22. Badly formed list ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error code is VALIDATION_ERROR\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"VALIDATION_ERROR\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "abc"
+              ]
+            }
+          }
+        },
+        {
+          "name": "23. Bad paging values",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error code is VALIDATION_ERROR\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"VALIDATION_ERROR\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists?page=0&perPage=200&visibility=friends",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "perPage",
+                  "value": "200"
+                },
+                {
+                  "key": "visibility",
+                  "value": "friends"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Other errors",
+      "item": [
+        {
+          "name": "24. Wrong method (PATCH)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 405\", function () {",
+                  "    pm.response.to.have.status(405);",
+                  "});",
+                  "pm.test(\"Error code is METHOD_NOT_ALLOWED\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"METHOD_NOT_ALLOWED\");",
+                  "});",
+                  "pm.test(\"Allow header lists the real methods\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Allow\")).to.eql(\"GET, PUT, DELETE\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_101"
+              ]
+            }
+          }
+        },
+        {
+          "name": "25. List that never existed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Error code is LIST_NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"LIST_NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/list_999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "list_999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "26. Unknown endpoint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Error code is ROUTE_NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().error.code).to.eql(\"ROUTE_NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenA}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/listz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "listz"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
