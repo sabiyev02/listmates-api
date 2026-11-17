@@ -4,7 +4,7 @@ ListMates is a social notes and to-do website: you make lists, choose who can se
 
 - **Full API documentation:** [`docs/API.md`](docs/API.md)
 - **Interactive docs:** `http://127.0.0.1:8000/docs` while the server is running
-- **Demo video (5 min):** [YOUTUBE LINK]
+- **Demo video (5 min):** https://youtu.be/UEONg8Be9MA?si=MlpUmKKe72DIx5ys
 
 > **Mock data:** the API uses in-memory mock data (9 lists, 3 users) instead of a real database. It resets every time the server restarts, including the automatic restarts from `--reload`.
 
@@ -114,5 +114,9 @@ See [`CONTRIBUTORS.md`](CONTRIBUTORS.md) for details.
 ### Commits per member
 
 ```text
-[PASTE THE OUTPUT OF: git shortlog -sn --all]
+11  Suleyman Abiyev
+     9  Ali Garashli
+     7  Emin Ismayilzade(Emin's previous Git account name)
+     4  Emin Ismayilzada
+     2  sabiyev02 (Suleyman's previous Git Account Name)
 ```
