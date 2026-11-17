@@ -3,11 +3,13 @@ from fastapi import APIRouter, Depends, Query, Request
 
 from app import store
 from app.auth import get_current_user
-from app.envelope import success
+from app.envelope import public_limit_reached, success
 from app.permissions import get_accessible_list, owner_filter_for
 from app.validation import check_list_body, check_list_id, check_list_query, parse_json_object
 
 router = APIRouter(prefix="/api/v1/lists", tags=["lists"])
+
+PUBLIC_LIST_LIMIT = 4
 
 # We read the body ourselves (after the token and ownership checks), so this
 # only tells Swagger at /docs what a body looks like.
@@ -58,6 +60,8 @@ def get_one_list(list_id: str, user: dict = Depends(get_current_user)):
 @router.post("", status_code=201, summary="Create a list", openapi_extra=LIST_BODY_DOCS)
 async def create_list(request: Request, user: dict = Depends(get_current_user)):
     fields = check_list_body(parse_json_object(await request.body()), replacing=False)
+    if fields["visibility"] == "public" and store.count_public(user["id"]) >= PUBLIC_LIST_LIMIT:
+        raise public_limit_reached()
     new_list = store.create_list(user["id"], fields)
     return success(new_list, "List created successfully.", status_code=201,
                    headers={"Location": f"/api/v1/lists/{new_list['id']}"})
@@ -66,8 +70,12 @@ async def create_list(request: Request, user: dict = Depends(get_current_user)):
 @router.put("/{list_id}", summary="Replace a list", openapi_extra=LIST_BODY_DOCS)
 async def replace_list(list_id: str, request: Request, user: dict = Depends(get_current_user)):
     check_list_id(list_id)
-    get_accessible_list(user, list_id)
+    existing = get_accessible_list(user, list_id)
     fields = check_list_body(parse_json_object(await request.body()), replacing=True)
+    # A list that is already Public does not count against its own limit.
+    if (fields["visibility"] == "public"
+            and store.count_public(existing["ownerId"], exclude_id=list_id) >= PUBLIC_LIST_LIMIT):
+        raise public_limit_reached()
     return success(store.replace_list(list_id, fields), "List updated successfully.")
 
 
