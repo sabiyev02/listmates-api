@@ -5,6 +5,7 @@ Run with:  uvicorn app.main:app --reload
 from fastapi import FastAPI
 
 from app.handlers import register_exception_handlers
+from app.routes import greeting
 
 app = FastAPI(
     title="ListMates API",
@@ -17,3 +18,4 @@ app = FastAPI(
 )
 
 register_exception_handlers(app)
+app.include_router(greeting.router)
