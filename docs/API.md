@@ -1104,9 +1104,11 @@ The finished video goes on YouTube as Unlisted, and the link goes in the README.
 
 ```text
 $ git shortlog -sn --all
-    [N]  Emin Ismayilzade
-    [N]  Suleyman Abiyev
-    [N]  Ali Garashli
+    11  Suleyman Abiyev
+     9  Ali Garashli
+     7  Emin Ismayilzade(Emin's previous Git account name)
+     4  Emin Ismayilzada
+     2  sabiyev02 (Suleyman's previous Git Account Name)
 ```
 
 (Paste the real output before submitting. The counts include merge commits, which belong to whoever clicks Merge on GitHub, so they won't match the table above exactly.)
@@ -1125,8 +1127,8 @@ $ git shortlog -sn --all
 
 ### Before submitting
 
-- [ ] Student IDs filled in (section 2, `CONTRIBUTORS.md` and the greeting page)
-- [ ] GitHub repository link in the README
-- [ ] `git shortlog -sn --all` output pasted into the README
-- [ ] Postman collection exported to `postman/`
-- [ ] YouTube demo link (5 minutes or less) in the README
+- [x ] Student IDs filled in (section 2, `CONTRIBUTORS.md` and the greeting page)
+- [ x] GitHub repository link in the README
+- [x ] `git shortlog -sn --all` output pasted into the README
+- [x ] Postman collection exported to `postman/`
+- [x ] YouTube demo link (5 minutes or less) in the README
