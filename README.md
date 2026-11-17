@@ -114,7 +114,7 @@ See [`CONTRIBUTORS.md`](CONTRIBUTORS.md) for details.
 ### Commits per member
 
 ```text
-11  Suleyman Abiyev
+    11  Suleyman Abiyev
      9  Ali Garashli
      7  Emin Ismayilzade(Emin's previous Git account name)
      4  Emin Ismayilzada
